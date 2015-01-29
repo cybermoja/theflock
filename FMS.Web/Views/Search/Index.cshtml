@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="box box-primary">
+    <div class="box-header">
+        <i class="fa fa-search"></i>
+        <h3 class="box-title" ng-show="query.length > 0">Search result for <span id="currentQuery">@(ViewBag.Query ?? "")</span></h3>
+        <h3 class="box-title" ng-show="query.length == 0">Start Searching</h3>
+</div>
+    <div class="box-body">
+        <div class="table-responsive" ng-show="searchResults.length > 0">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <td>LastName</td>
+                        <td>FirstName</td>
+                        <td>Area</td>
+                        <td>Group</td>
+                        <td style="width:40px">&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in searchResults">
+                        <td>{{item.lastName}}</td>
+                        <td>{{item.firstName}}</td>
+                        <td>{{item.area}}</td>
+                        <td>{{item.group}}</td>
+                        <td>
+                            <div class="dropdown">
+                                <a class="btn btn-default btn-sm" href="#" data-toggle="dropdown">
+                                    <i class="fa fa-cog"></i> <i class="fa fa-caret-down"></i> 
+                                </a>
+                                <ul class="dropdown-menu" role="menu" style="left: -100px">
+                                    <li><a href="#">View Details</a></li>
+                                    <li><a href="#">R2-04</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div class="box-footer"></div>
+</div>
+
+@section scripts {
+
+    <script type="text/javascript">
+    (function (angular) {
+
+        angular.module("fmsApp", []).controller("mainController", function ($scope, $http) {
+                $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                $scope.searchResults = [
+                    { lastName: 'Garcia', firstName: 'Mark', area: 1, group: 3 },
+                    { lastName: 'Garcia', firstName: 'Elenie', area: 1, group: 3 }
+                ];
+                $scope.query = '@(ViewBag.Query ?? "")';
+                $scope.origin = '@(ViewBag.Origin ?? "")';
+            });
+
+        })(angular);
+    </script>
+}

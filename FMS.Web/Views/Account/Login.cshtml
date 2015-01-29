@@ -1,0 +1,156 @@
+﻿@using FMS.Web.Helper
+@using FMS.Web.Model
+@using FMS.Web.Helper.Extensions
+@using System.Web
+
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+    ViewBag.PageTitle = "Log in";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string tempCryptoUrl = "http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js".ToImageUrl();
+}
+
+<div class="box box-primary">
+    @if (Current.User != null)
+    {
+        <div class="alert alert-error">
+            <h4>Sorry </h4>
+            <p> You don't have authorization to access this page</p>
+        </div>
+    }
+    <div class="box-header">
+        <i class="fa fa-lock"></i>
+        <h3 class="box-title">Login to access Flock Management System (FMS)</h3>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-6">
+                <section id="loginForm">
+                    @using (Html.BeginForm("_Login", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "frmLogin" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Log1, new { id = "HTCLog1" })
+                        @Html.HiddenFor(m => m.Log2, new { id = "HTCLog2" })
+
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", id = "logAjax1" })
+                                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "logAjax2" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(m => m.RememberMe)
+                                    @Html.LabelFor(m => m.RememberMe, "Remember Me")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Log in" class="btn btn-primary" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                @Html.ActionLink("Forgot your password?", "ForgetPassword", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    }
+
+                    <div id="lblErr" class="alert alert-danger" style="display: none;"></div>
+                </section>
+                <img src="@Url.Content("~/Content/images/ajax-loader1.gif")" id="loadinglogin" alt="loading" style="display:none;width:180px;" />
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+    </div>
+    <div class="box-footer"></div>
+</div>
+@section other_scripts {
+    <script type="text/javascript" src="@tempCryptoUrl"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validator.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validator.unobtrusive.min.js"></script>
+}
+
+@section scripts {
+    <script type="text/javascript">
+
+        $.validator.unobtrusive.parse(document);
+
+        $("#frmLogin").submit(function () {
+            var form = $(this);
+            if (form.valid()) {
+
+                $('#lblErr').hide();
+
+                var a = $("#logAjax1").val();
+                var b = $("#logAjax2").val();
+                var ab = GetAllTheALLProductType(a);
+                var bc = GetAllTheALLProductType(b);
+                $("#HTCLog1").val(ab.ciphertext.toString(CryptoJS.enc.Base64));
+                $("#HTCLog2").val(bc.ciphertext.toString(CryptoJS.enc.Base64));
+                $("#frmLogin").hide();
+                $("#logAjax1").val('');
+                $("#logAjax2").val('');
+                $("#loadinglogin").show();
+
+                $.ajax({
+                    url: $(form).attr('action'),
+                    type: $(form).attr('method'),
+                    data: $(form).serialize(),
+                    success: function (result) {
+                        if (result.code == 0) {
+
+                            window.location = '@HttpUtility.JavaScriptStringEncode(@ViewBag.ReturnUrl)';
+
+                        } else {
+                            showLoginErr(result.message);
+                        }
+                    },
+                    error: function (jqXhr, status, err) {
+                        showLoginErr('Problem contacting server');
+                    }
+                });
+            }
+
+            return false;
+        });
+
+        function showLoginErr(message) {
+            $('#lblErr').html($('<div/>').html(message).text());
+            $('#lblErr').show();
+            $("#loadinglogin").hide();
+            $("#frmLogin").show();
+        }
+
+        function GetAllTheALLProductType(value) {
+            var key = CryptoJS.enc.Utf8.parse("@Session["BPKey"]");
+            var iv = CryptoJS.enc.Utf8.parse("@Session["BPKeyIV"]");
+            var kxk = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(value), key,
+                {
+                    keySize: 128 / 8,
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+
+            return kxk;
+
+        }
+
+    </script>
+}

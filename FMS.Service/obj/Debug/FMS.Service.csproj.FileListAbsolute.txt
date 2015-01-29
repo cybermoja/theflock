@@ -1,0 +1,9 @@
+c:\Users\Mark\documents\visual studio 2013\Projects\FMS\FMS.Service\bin\Debug\FMS.Service.dll
+c:\Users\Mark\documents\visual studio 2013\Projects\FMS\FMS.Service\bin\Debug\FMS.Service.pdb
+c:\Users\Mark\documents\visual studio 2013\Projects\FMS\FMS.Service\bin\Debug\FMS.Data.dll
+c:\Users\Mark\documents\visual studio 2013\Projects\FMS\FMS.Service\bin\Debug\FMS.Data.pdb
+c:\Users\Mark\documents\visual studio 2013\Projects\FMS\FMS.Service\obj\Debug\FMS.Service.csprojResolveAssemblyReference.cache
+c:\Users\Mark\documents\visual studio 2013\Projects\FMS\FMS.Service\obj\Debug\FMS.Service.dll
+c:\Users\Mark\documents\visual studio 2013\Projects\FMS\FMS.Service\obj\Debug\FMS.Service.pdb
+C:\Users\Mark\documents\visual studio 2013\Projects\FMS\FMS.Service\bin\Debug\NPoco.dll
+C:\Users\Mark\documents\visual studio 2013\Projects\FMS\FMS.Service\bin\Debug\NPoco.pdb

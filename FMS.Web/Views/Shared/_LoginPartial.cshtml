@@ -1,0 +1,63 @@
+﻿@using FMS.Web.Helper
+@using FMS.Web.Helper.Extensions
+
+@if (Request.IsAuthenticated)
+{
+    string tempEmail = User.Identity.Name.Replace("@", "gp_4tU");
+    tempEmail = tempEmail.Replace(".", "L5k-");
+    int uid = (Current.User.ID);
+         <!-- User Account: style can be found in dropdown.less -->
+    <li class="dropdown user user-menu">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="glyphicon glyphicon-user"></i>
+            <span>@User.Identity.Name.Split('@')[0]<i class="caret"></i></span>
+        </a>
+        <ul class="dropdown-menu">
+            <!-- User image -->
+            <li class="user-header bg-light-blue" style="cursor: pointer">
+                <img src="/content/images/avatar3.png" class="img-circle" alt="User Image" />
+                <p>
+                    @{
+                        var userString = "{0}, {1}{2}".FormatWith(Current.Membership.LastName, Current.Membership.FirstName, Current.Membership.Office == FMS.Data.MemberOffices.None ? string.Empty : " - " + Current.Membership.Office.ToString());
+                    }
+                    @Html.Raw(userString)
+                    <small>Member since Nov. 2012</small>
+                </p>
+            </li>
+            <!-- Menu Body -->
+            <li class="user-body hide">
+                <div class="col-xs-4 text-center">
+                    <a href="#">Followers</a>
+                </div>
+                <div class="col-xs-4 text-center">
+                    <a href="#">Sales</a>
+                </div>
+                <div class="col-xs-4 text-center">
+                    <a href="#">Friends</a>
+                </div>
+            </li>
+            <!-- Menu Footer-->
+            <li class="user-footer">
+                @*<div class="pull-left">
+                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                    </div>*@
+                <div class="pull-left">
+                    @Html.ActionLink("Change Password", "LinkToForgetPassword", new { controller = "Account", uid = uid, E = tempEmail }, new { @class = "btn btn-default btn-flat" })
+                </div>
+                <div class="pull-right">
+                    @using (Html.BeginForm("LogOout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "user-form pull-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default btn-flat">Sign out</a>
+                    }
+                </div>
+            </li>
+        </ul>
+    </li>
+
+}
+else
+{
+    <li>@Html.ActionLink("LOG IN", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    <li>@Html.ActionLink("FORGET PASSWORD", "ForgetPassword", "Account")</li>
+}

@@ -1,0 +1,11 @@
+﻿@inherits FMS.Web.Helper.PageHelper
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+
+@helper LoaderImage(string classes = "")
+{
+    <div class="sk-spinner sk-spinner-chasing-dots @Html.Raw(classes)">
+        <div class="sk-dot1"></div>
+        <div class="sk-dot2"></div>
+    </div>
+}
